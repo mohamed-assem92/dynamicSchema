@@ -1,0 +1,36 @@
+{
+  "name": "fixedtask",
+  "version": "1.0.0",
+  "description": "generating dynamic form and dynamic mongoose schema",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohamed-assem92/dynamicSchema.git"
+  },
+  "keywords": [
+    "dynamic",
+    "schema",
+    "forms"
+  ],
+  "author": "Mohamed Assem",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohamed-assem92/dynamicSchema/issues"
+  },
+  "homepage": "https://github.com/mohamed-assem92/dynamicSchema#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "express-jwt-token": "^0.1.5",
+    "json-schema-to-mongoose": "^0.2.2",
+    "jsonschema": "^1.2.4",
+    "jwt-decode": "^2.2.0",
+    "mongoose": "^5.0.11",
+    "mongoose-gen": "^2.1.1",
+    "path": "^0.12.7"
+  }
+}

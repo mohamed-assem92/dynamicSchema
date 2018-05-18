@@ -16,12 +16,11 @@ router.post('/:keyWord', (req , resp) => {
   JsonSheme.getShema(formName)
   .then((result) => {
     if (result) {
-      // console.log();
       let schema = result.sch;
-      let schemaResult = v.validate(instance, schema).valid;
+      let schemaResult = v.validate(instance, schema);
 
-      if (schemaResult) {
-        
+      if (schemaResult.errors.length == 0) {
+
         let bodyRecord = {}
 
         for (const key of Object.keys(result.sch.properties)) {
@@ -40,6 +39,7 @@ router.post('/:keyWord', (req , resp) => {
         schemaResult.errors.map((err) => {
           errorMessages.push(err.message);
         })
+        console.log(schemaResult.errors);
         return Promise.reject(errorMessages);
 
       }
@@ -52,7 +52,7 @@ router.post('/:keyWord', (req , resp) => {
 
   })
   .then((result) => {resp.status(200).json({message:"Record Inserted",record:result})})
-  .catch(err => resp.status(400).json({message:errorMessages}))
+  .catch(err => resp.status(400).json({message:err}))
 
 
 })

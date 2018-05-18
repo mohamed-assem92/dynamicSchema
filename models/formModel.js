@@ -5,7 +5,8 @@ const jsonSchema = new Schema({
   sch:{
     id:{
       type:String,
-      required:true
+      required:true,
+      unique:true
     },
     properties:{
       type:Object,
@@ -16,20 +17,49 @@ const jsonSchema = new Schema({
       required:true
     },
     required:[]
-  }
+  },
+  fields:[{
+    _id:false,
+    type:{
+      type:String,
+      required:true
+    },
+    name:{
+      type:String,
+      required:true
+    },
+    class:{
+      type:String,
+    },
+    html:{
+      type:String,
+      required:true
+    },
+    required:{
+      type:Boolean
+    },
+    placeholder:{
+      type:String
+    },
+    value:{
+      type:String
+    }
+  }]
 });
 
 
 jsonSchema.statics.addSchema = function (obj) {
 
-  const newShema = new JsonSheme({
-    sch:{
-      id:obj.id,
-      properties:obj.properties,
-      type:obj.type,
-      required:obj.required
-    }
-  })
+  let result = splitObject(obj);
+    const newShema = new JsonSheme({
+      sch:{
+        id:result.obj.id,
+        properties:result.obj.properties,
+        type:result.obj.type,
+        required:result.obj.required
+      },
+      fields:result.fieldsArray
+    })
     return newShema.save()
 };
 
@@ -40,7 +70,9 @@ jsonSchema.statics.getShema = function (schemaName) {
 };
 
 jsonSchema.statics.updateSchema = function (newSchema , schemaName) {
-  return JsonSheme.updateOne({ "sch.id":schemaName }, { $set: { sch: newSchema }});
+
+  let result = splitObject(newSchema);
+  return JsonSheme.updateOne({ "sch.id":schemaName }, { $set: { sch: result.obj , fields: result.fieldsArray }});
 }
 
 
@@ -48,3 +80,26 @@ jsonSchema.statics.updateSchema = function (newSchema , schemaName) {
 const JsonSheme = mongoose.model("schema", jsonSchema);
 
 module.exports = JsonSheme;
+
+const splitObject = function (obj) {
+  let fieldsArray = [];
+  let requiredArr = obj.required;
+  let fields = Object.keys(obj.properties);
+  let properties = obj.properties;
+
+  for (let key of fields) {
+
+      if (properties[key].hasOwnProperty("field")) {
+        if (requiredArr.includes(key)) {
+          properties[key].field["required"] = true;
+          fieldsArray.push(properties[key].field)
+          delete properties[key].field
+        }
+        else {
+          fieldsArray.push(properties[key].field)
+          delete properties[key].field
+        }
+      }
+  }
+  return {fieldsArray , obj};
+}

@@ -8,7 +8,7 @@ router.get('/:keyWord', (req, resp) => {
 
   JsonSheme.getShema(formName)
   .then((result) => {
-    resp.status(200).json({message:result.sch});
+    resp.status(200).json({message:result.fields});
   })
   .catch((err) => {resp.status(403).json({message:"No Such Form on the DataBase"})})
 
